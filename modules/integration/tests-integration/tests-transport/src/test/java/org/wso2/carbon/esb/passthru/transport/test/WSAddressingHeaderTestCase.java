@@ -21,20 +21,35 @@ import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
+
+import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class WSAddressingHeaderTestCase extends ESBIntegrationTest {
 
+    private ServerConfigurationManager configurationManager;
+
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+
+        AutomationContext autoCtx = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(autoCtx);
+
+
+        serverConfigurationManager.applyConfiguration(
+                new File(getClass().getResource("/artifacts/ESB/proxyconfig/proxy/passThroughProxy/WSAddressingWSDL/axis2.xml").getPath()));
+
         loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/proxy_service_enabling_wsaddressing.xml");
+                "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/WSAddressingWSDL/proxy_service_enabling_wsaddressing.xml");
 
     }
 
@@ -52,11 +67,14 @@ public class WSAddressingHeaderTestCase extends ESBIntegrationTest {
                 .getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        try{
+            super.cleanup();
+        } catch (Exception ex){
+            log.error("Issue with cleanup", ex);
+        }
     }
 }

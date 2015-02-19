@@ -102,7 +102,7 @@
                     </wsdl:operation>
                 </wsdl:portType>
                 <wsdl:binding name="SimpleStockQuoteServiceSOAP11Binding" type="axis2:SimpleStockQuoteServicePortType">
-                    <wsaw:UsingAddressing wsdl:required="true" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/> <!-- Enabling WSAddressing -->
+                    <wsaw:UsingAddressing wsdl:required="true" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
                     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
                     <wsdl:operation name="placeOrder">
                         <soap:operation soapAction="urn:placeOrder" style="document"/>
